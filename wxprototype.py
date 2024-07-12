@@ -8,19 +8,34 @@ class MpdAmpMain(wx.Frame):
 
         panel = wx.Panel(self, size=(275,116))
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-
-        panel.SetSizer(sizer)
-
         main = wx.Image(os.path.join('base-2.91/main.bmp'), wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        #sbmp = wx.StaticBitmap(panel, wx.ID_ANY, main, size=(275,116))
-        #sizer.Add(sbmp, 0, wx.EXPAND|wx.ALL, 1)
+        sbmp = wx.StaticBitmap(panel, wx.ID_ANY, main, size=(275,116))
 
-        self.Bind(wx.EVT_LEFT_DOWN, self.mouse_left_down, self)
+        self.windowpos = None
+
+        sbmp.Bind(wx.EVT_LEFT_DOWN, self.mouse_down)
+        sbmp.Bind(wx.EVT_LEFT_UP, self.mouse_up)
+        sbmp.Bind(wx.EVT_MOTION, self.mouse_motion)
     
-    def mouse_left_down(self, event: wx.MouseEvent) -> None:
-        print('test')
+    def mouse_down(self, event: wx.MouseEvent) -> None:
         print(event)
+
+        print(event.Position)
+        print(self.Position)
+        
+        self.windowpos = event.Position
+        event.Skip()
+
+    def mouse_up(self, event: wx.MouseEvent) -> None:
+        print(event)
+        self.windowpos = None
+        event.Skip()
+        
+    def mouse_motion(self, event: wx.MouseEvent) -> None:
+        if event.Dragging():
+            print(event.Position)
+            #self.SetPosition()
+        event.Skip()
 
 def main():
     """The main function for MPDCMD"""
